@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "lodepng.h"
+#include "vec3.h"
 
 int main(int argc, const char * argv[]) {
     int nx = 200;
@@ -20,13 +21,10 @@ int main(int argc, const char * argv[]) {
     
     for (int i=0; i < ny; i++) {
         for (int j=0; j < nx; j++) {
-            float r = float(j) / float(nx);
-            float g = float(ny-i) / float(ny);
-            float b = 0.2;
-            
-            image[4 * nx * i + 4 * j + 0] = 255 * r;
-            image[4 * nx * i + 4 * j + 1] = 255 * g;
-            image[4 * nx * i + 4 * j + 2] = 255 * b;
+            vec3 color(float(j) / float(nx), float(ny-i) / float(ny), 0.2);
+            image[4 * nx * i + 4 * j + 0] = 255 * color.r();
+            image[4 * nx * i + 4 * j + 1] = 255 * color.g();
+            image[4 * nx * i + 4 * j + 2] = 255 * color.b();
             image[4 * nx * i + 4 * j + 3] = 255;
         }
     }
