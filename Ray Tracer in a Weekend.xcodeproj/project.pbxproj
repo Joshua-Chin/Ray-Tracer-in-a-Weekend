@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		532E2F5C20B9FC5800D03BA5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 532E2F5B20B9FC5800D03BA5 /* main.cpp */; };
+		532E2F6520B9FEE800D03BA5 /* lodepng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 532E2F6320B9FEE800D03BA5 /* lodepng.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		532E2F5820B9FC5800D03BA5 /* Ray Tracer in a Weekend */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Ray Tracer in a Weekend"; sourceTree = BUILT_PRODUCTS_DIR; };
 		532E2F5B20B9FC5800D03BA5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		532E2F6320B9FEE800D03BA5 /* lodepng.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = lodepng.cpp; sourceTree = "<group>"; };
+		532E2F6420B9FEE800D03BA5 /* lodepng.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lodepng.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +60,9 @@
 		532E2F5A20B9FC5800D03BA5 /* Ray Tracer in a Weekend */ = {
 			isa = PBXGroup;
 			children = (
+				532E2F6420B9FEE800D03BA5 /* lodepng.h */,
 				532E2F5B20B9FC5800D03BA5 /* main.cpp */,
+				532E2F6320B9FEE800D03BA5 /* lodepng.cpp */,
 			);
 			path = "Ray Tracer in a Weekend";
 			sourceTree = "<group>";
@@ -119,6 +124,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				532E2F5C20B9FC5800D03BA5 /* main.cpp in Sources */,
+				532E2F6520B9FEE800D03BA5 /* lodepng.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
