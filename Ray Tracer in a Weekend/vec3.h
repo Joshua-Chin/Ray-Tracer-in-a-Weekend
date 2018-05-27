@@ -12,11 +12,11 @@
 #include <math.h>
 
 class vec3 {
-    const float d[3];
+    float d[3];
     
 public:
+    vec3() : d{0,0,0} {}
     vec3(float x, float y, float z) : d{x, y, z} {}
-    vec3(const vec3& v): d{v[0], v[1], v[2]} {}
     // Accessor Methods
     inline float x() const {return d[0];}
     inline float y() const {return d[1];}

@@ -10,36 +10,24 @@
 #include <vector>
 
 #include "lodepng.h"
-#include "ray.h"
 
-float hit_sphere(const vec3& center, float radius, const ray& r) {
-    vec3 oc = r.origin() - center;
-    float a = r.direction() * r.direction();
-    float b = 2 * oc * r.direction();
-    float c = oc * oc - radius * radius;
-    float discriminant = b * b - 4 * a * c;
-    if (discriminant < 0) {
-        return -1;
-    } else {
-        return (-b - sqrt(discriminant)) / (2 * a);
-    }
-}
+#include "sphere.h"
+#include "hittable_list.h"
 
-vec3 color(const ray& r) {
-    vec3 center(0, 0, -1);
-    float t = hit_sphere(center, 0.5, r);
-    if (t > 0.0) {
-        vec3 N = normalized(r.point_at(t) - center);
+vec3 color(const ray& r, hittable& h) {
+    hit_record record;
+    if (h.hit_by(r, 0, MAXFLOAT, record)) {
+        vec3 N = record.normal;
         return 0.5 * vec3(N[0]+1, N[1]+1, N[2]+1);
     }
     vec3 d = r.direction();
-    t = 0.5 * (d.y() + 1);
+    float t = 0.5 * (d.y() + 1);
     return (1 - t) * vec3(1, 1, 1) + t * vec3(0.5, 0.7, 1);
 }
 
 int main(int argc, const char * argv[]) {
-    int nx = 400;
-    int ny = 200;
+    int nx = 200;
+    int ny = 100;
     
     std::vector<std::uint8_t> image;
     image.resize(4 * ny * nx);
@@ -49,12 +37,17 @@ int main(int argc, const char * argv[]) {
     vec3 vertical(0,2,0);
     vec3 lower_left(-2,-1,-1);
     
+    hittable_list hl;
+    
+    hl.hittables.push_back(new sphere(vec3(0, 0, -1), 0.5));
+    hl.hittables.push_back(new sphere(vec3(0, -100.5, -1), 100));
+    
     for (int i=0; i < ny; i++) {
         for (int j=0; j < nx; j++) {
             float u = float(j) / float(nx);
-            float v = float(i) / float(ny);
+            float v = 1 - float(i) / float(ny);
             ray r(origin, lower_left + u * horizontal + v * vertical);
-            vec3 c = color(r);
+            vec3 c = color(r, hl);
             image[4 * nx * i + 4 * j + 0] = 255 * c.r();
             image[4 * nx * i + 4 * j + 1] = 255 * c.g();
             image[4 * nx * i + 4 * j + 2] = 255 * c.b();

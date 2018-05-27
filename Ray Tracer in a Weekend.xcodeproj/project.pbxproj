@@ -30,6 +30,9 @@
 		532E2F6420B9FEE800D03BA5 /* lodepng.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lodepng.h; sourceTree = "<group>"; };
 		532E2F6620BA05A800D03BA5 /* vec3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vec3.h; sourceTree = "<group>"; };
 		532E2F6720BA090200D03BA5 /* ray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ray.h; sourceTree = "<group>"; };
+		532E2F6820BA1B8600D03BA5 /* hittable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hittable.h; sourceTree = "<group>"; };
+		532E2F6920BA1C2000D03BA5 /* sphere.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sphere.h; sourceTree = "<group>"; };
+		532E2F6A20BA1F9200D03BA5 /* hittable_list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hittable_list.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +67,10 @@
 			children = (
 				532E2F6420B9FEE800D03BA5 /* lodepng.h */,
 				532E2F5B20B9FC5800D03BA5 /* main.cpp */,
+				532E2F6A20BA1F9200D03BA5 /* hittable_list.h */,
 				532E2F6720BA090200D03BA5 /* ray.h */,
+				532E2F6820BA1B8600D03BA5 /* hittable.h */,
+				532E2F6920BA1C2000D03BA5 /* sphere.h */,
 				532E2F6320B9FEE800D03BA5 /* lodepng.cpp */,
 				532E2F6620BA05A800D03BA5 /* vec3.h */,
 			);
