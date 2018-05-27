@@ -57,4 +57,42 @@ public:
     }
 };
 
+bool refract(const vec3& v, const vec3& n, float ni_nt, vec3& refracted) {
+    float cos1 = -v.dot(n); // check sign
+    float cos2_squared = 1 - ni_nt * ni_nt * (1 - cos1) * (1 - cos1);
+    if (cos2_squared > 0) {
+        float cos2 = sqrt(cos2_squared);
+        refracted = ni_nt * v + (ni_nt * cos1 - cos2) * n;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+class dielectric : public material {
+    float ri;
+public:
+    dielectric(float refraction_index) : ri(refraction_index) {}
+    virtual bool scatter(const ray& r, const hit_record& rec, vec3& attenuation, ray& scattered) const {
+        vec3 outward_normal;
+        float ni_nt;
+        // check if exiting material
+        if (r.direction().dot(rec.normal) > 0) {
+            outward_normal = -rec.normal;
+            ni_nt = ri;
+        } else {
+            outward_normal = rec.normal;
+            ni_nt = 1 / ri;
+        }
+        vec3 refracted;
+        if (refract(r.direction(), outward_normal, ni_nt, refracted)) {
+            scattered = ray(rec.position, refracted);
+            return true;
+        } else {
+            scattered = ray(rec.position, reflect(r.direction(), outward_normal));
+            return true;
+        }
+    }
+};
+
 #endif /* material_h */
