@@ -24,6 +24,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5310BE6D20BA3EDF00C7E39C /* camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
 		532E2F5820B9FC5800D03BA5 /* Ray Tracer in a Weekend */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Ray Tracer in a Weekend"; sourceTree = BUILT_PRODUCTS_DIR; };
 		532E2F5B20B9FC5800D03BA5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		532E2F6320B9FEE800D03BA5 /* lodepng.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = lodepng.cpp; sourceTree = "<group>"; };
@@ -71,6 +72,7 @@
 				532E2F6720BA090200D03BA5 /* ray.h */,
 				532E2F6820BA1B8600D03BA5 /* hittable.h */,
 				532E2F6920BA1C2000D03BA5 /* sphere.h */,
+				5310BE6D20BA3EDF00C7E39C /* camera.h */,
 				532E2F6320B9FEE800D03BA5 /* lodepng.cpp */,
 				532E2F6620BA05A800D03BA5 /* vec3.h */,
 			);

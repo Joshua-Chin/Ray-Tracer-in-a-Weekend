@@ -13,6 +13,7 @@
 
 #include "sphere.h"
 #include "hittable_list.h"
+#include "camera.h"
 
 vec3 color(const ray& r, hittable& h) {
     hit_record record;
@@ -32,13 +33,9 @@ int main(int argc, const char * argv[]) {
     std::vector<std::uint8_t> image;
     image.resize(4 * ny * nx);
     
-    vec3 origin(0,0,0);
-    vec3 horizontal(4,0,0);
-    vec3 vertical(0,2,0);
-    vec3 lower_left(-2,-1,-1);
+    camera cam;
     
     hittable_list hl;
-    
     hl.hittables.push_back(new sphere(vec3(0, 0, -1), 0.5));
     hl.hittables.push_back(new sphere(vec3(0, -100.5, -1), 100));
     
@@ -46,7 +43,7 @@ int main(int argc, const char * argv[]) {
         for (int j=0; j < nx; j++) {
             float u = float(j) / float(nx);
             float v = 1 - float(i) / float(ny);
-            ray r(origin, lower_left + u * horizontal + v * vertical);
+            ray r = cam.get_ray(u, v);
             vec3 c = color(r, hl);
             image[4 * nx * i + 4 * j + 0] = 255 * c.r();
             image[4 * nx * i + 4 * j + 1] = 255 * c.g();
