@@ -44,32 +44,50 @@ vec3 color(const ray& r, const hittable& h, int depth) {
 }
 
 int main(int argc, const char * argv[]) {
-    int nx = 200;
-    int ny = 100;
-    int ns = 50;
-    int nb = 20;
-    
+    int nx = 1920;
+    int ny = 1080;
+    int ns = 100;
+    int nb = 50;
     float gamma = 1 / 2.2;
     
     std::vector<std::uint8_t> image;
     image.resize(4 * ny * nx);
     
-    camera cam(vec3(-2,2,1), vec3(0,0,-1), vec3(0,1,0), 120, float(nx) / float(ny), 2);
+    camera cam(vec3(0,1.5,-10), vec3(0,0,0), vec3(0,1,0), 90, float(nx) / float(ny), 0.1);
+    
+    std::uniform_real_distribution<float> d(0, 1);
     
     hittable_list hl;
-    hl.hittables.push_back(new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3))));
-    hl.hittables.push_back(new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.2)));
-    hl.hittables.push_back(new sphere(vec3(-1, 0, -1), 0.5, new dielectric(1.5)));
-    hl.hittables.push_back(new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0))));
+    int l = 11;
+    for (int i=-l; i<=l; i++) {
+        for (int j=-l; j<l; j++) {
+            float mat_choice = d(engine);
+            material* mat;
+            if (mat_choice <= 0.75) {
+                vec3 c = vec3(d(engine), d(engine), d(engine));
+                mat = new lambertian(c * c);
+            } else if (mat_choice <= 0.9) {
+                vec3 c = vec3(d(engine), d(engine), d(engine));
+                mat = new metal(0.5 * c + 0.5, 0.5 * d(engine));
+            } else {
+                mat = new dielectric(1.5);
+            }
+            vec3 center(i + 0.9 * d(engine), 0.2, j + 0.9 * d(engine));
+            hl.hittables.push_back(new sphere(center, 0.2, mat));
+        }
+    }
 
-    std::uniform_real_distribution<float> dist(0, 1);
+    hl.hittables.push_back(new sphere(vec3(0, -1000, 0), 1000, new lambertian(vec3(0.8, 0.8, 0.8))));
+    hl.hittables.push_back(new sphere(vec3(0, 1, 0), 1, new lambertian(vec3(0.8, 0.3, 0.3))));
+    hl.hittables.push_back(new sphere(vec3(4, 1, 0), 1, new metal(vec3(0.8, 0.6, 0.2), 0)));
+    hl.hittables.push_back(new sphere(vec3(-4, 1, 0), 1, new dielectric(1.5)));
     
     for (int i=0; i < ny; i++) {
         for (int j=0; j < nx; j++) {
             vec3 c;
             for (int n=0; n < ns; n++) {
-                float u = (j + dist(engine)) / float(nx);
-                float v = 1 - (i + dist(engine)) / float(ny);
+                float u = (j + d(engine)) / float(nx);
+                float v = 1 - (i + d(engine)) / float(ny);
                 ray r = cam.get_ray(u, v);
                 c += color(r, hl, nb);
             }
@@ -79,6 +97,7 @@ int main(int argc, const char * argv[]) {
             image[4 * nx * i + 4 * j + 2] = 255 * pow(c.b(), gamma);
             image[4 * nx * i + 4 * j + 3] = 255; // A
         }
+        std::cout << "finished row " << i << std::endl;
     }
     
     lodepng::encode("/Users/joshuachin/Documents/output.png", image, nx, ny);
