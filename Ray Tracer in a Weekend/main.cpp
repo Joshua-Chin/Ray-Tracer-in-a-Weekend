@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <random>
 #include <vector>
 
 #include "lodepng.h"
@@ -27,8 +28,9 @@ vec3 color(const ray& r, hittable& h) {
 }
 
 int main(int argc, const char * argv[]) {
-    int nx = 200;
-    int ny = 100;
+    int nx = 600;
+    int ny = 300;
+    int ns = 100;
     
     std::vector<std::uint8_t> image;
     image.resize(4 * ny * nx);
@@ -39,12 +41,19 @@ int main(int argc, const char * argv[]) {
     hl.hittables.push_back(new sphere(vec3(0, 0, -1), 0.5));
     hl.hittables.push_back(new sphere(vec3(0, -100.5, -1), 100));
     
+    std::default_random_engine rng;
+    std::uniform_real_distribution<float> dist(0, 1);
+    
     for (int i=0; i < ny; i++) {
         for (int j=0; j < nx; j++) {
-            float u = float(j) / float(nx);
-            float v = 1 - float(i) / float(ny);
-            ray r = cam.get_ray(u, v);
-            vec3 c = color(r, hl);
+            vec3 c;
+            for (int n=0; n < ns; n++) {
+                float u = (j + dist(rng)) / float(nx);
+                float v = 1 - (i + dist(rng)) / float(ny);
+                ray r = cam.get_ray(u, v);
+                c += color(r, hl);
+            }
+            c /= ns;
             image[4 * nx * i + 4 * j + 0] = 255 * c.r();
             image[4 * nx * i + 4 * j + 1] = 255 * c.g();
             image[4 * nx * i + 4 * j + 2] = 255 * c.b();

@@ -25,6 +25,7 @@ public:
     inline float g() const {return d[1];}
     inline float b() const {return d[2];}
     inline float operator[](int i) const {return d[i];}
+    inline float& operator[](int i) {return d[i];}
     
     inline float length() const {
         return sqrtf(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
@@ -34,6 +35,14 @@ public:
 // vector addition
 inline vec3 operator+(const vec3 v1, const vec3 v2) {
     return vec3(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]);
+}
+
+// element-wise division
+inline vec3& operator+=(vec3& v1, const vec3 v2) {
+    v1[0] += v2[0];
+    v1[1] += v2[1];
+    v1[2] += v2[2];
+    return v1;
 }
 
 inline vec3 operator-(const vec3 v1, const vec3 v2) {
@@ -53,6 +62,14 @@ inline float operator*(const vec3 v1, const vec3 v2) {
 // element-wise division
 inline vec3 operator/(const vec3 v, float f) {
     return vec3(v[0] / f, v[1] / f, v[2] / f);
+}
+
+// element-wise division
+inline vec3& operator/=(vec3& v, float f) {
+    v[0] /= f;
+    v[1] /= f;
+    v[2] /= f;
+    return v;
 }
 
 inline vec3 normalized(const vec3 v) {
