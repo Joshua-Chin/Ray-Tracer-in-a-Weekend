@@ -18,7 +18,7 @@ vec3 random_in_unit_disk() {
     std::uniform_real_distribution<float> d(-1, 1);
     do {
         p = vec3(d(engine), d(engine), 0);
-    } while (p.dot(p) > 1);
+    } while (p.dot(p) >= 1);
     return p;
 }
 
@@ -30,7 +30,7 @@ class camera {
     vec3 u, v;
     float lens_radius;
 public:
-    camera(const vec3& pos, const vec3& lookat, const vec3& up, float hfov, float aspect, float aperture) {
+    camera(const vec3& pos, const vec3& lookat, const vec3& up, float hfov, float aspect, float aperture, float focus) {
         float theta = hfov * M_PI / 180;
         float half_width = tan(theta/2);
         float half_height = half_width / aspect;
@@ -39,7 +39,6 @@ public:
         u = normalized(up.cross(w));
         v = w.cross(u);
         
-        float focus = (pos-lookat).length();
         lens_radius = aperture / 2;
         
         origin = pos;

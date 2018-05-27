@@ -53,7 +53,7 @@ int main(int argc, const char * argv[]) {
     std::vector<std::uint8_t> image;
     image.resize(4 * ny * nx);
     
-    camera cam(vec3(0,1.5,-10), vec3(0,0,0), vec3(0,1,0), 90, float(nx) / float(ny), 0.1);
+    camera cam(vec3(13,2,3), vec3(0,0,0), vec3(0,1,0), 30, float(nx) / float(ny), 0.1, 10);
     
     std::uniform_real_distribution<float> d(0, 1);
     
@@ -78,9 +78,9 @@ int main(int argc, const char * argv[]) {
     }
 
     hl.hittables.push_back(new sphere(vec3(0, -1000, 0), 1000, new lambertian(vec3(0.8, 0.8, 0.8))));
-    hl.hittables.push_back(new sphere(vec3(0, 1, 0), 1, new lambertian(vec3(0.8, 0.3, 0.3))));
+    hl.hittables.push_back(new sphere(vec3(-4, 1, 0), 1, new lambertian(vec3(0.8, 0.3, 0.3))));
     hl.hittables.push_back(new sphere(vec3(4, 1, 0), 1, new metal(vec3(0.8, 0.6, 0.2), 0)));
-    hl.hittables.push_back(new sphere(vec3(-4, 1, 0), 1, new dielectric(1.5)));
+    hl.hittables.push_back(new sphere(vec3(0, 1, 0), 1, new dielectric(1.5)));
     
     for (int i=0; i < ny; i++) {
         for (int j=0; j < nx; j++) {
