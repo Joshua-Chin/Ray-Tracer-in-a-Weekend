@@ -7,14 +7,15 @@
 //
 
 #include <iostream>
-#include <random>
 #include <vector>
+#include <random>
 
 #include "lodepng.h"
 
 #include "sphere.h"
 #include "hittable_list.h"
 #include "camera.h"
+#include "rng.h"
 
 vec3 color(const ray& r, hittable& h) {
     hit_record record;
@@ -40,16 +41,15 @@ int main(int argc, const char * argv[]) {
     hittable_list hl;
     hl.hittables.push_back(new sphere(vec3(0, 0, -1), 0.5));
     hl.hittables.push_back(new sphere(vec3(0, -100.5, -1), 100));
-    
-    std::default_random_engine rng;
+
     std::uniform_real_distribution<float> dist(0, 1);
     
     for (int i=0; i < ny; i++) {
         for (int j=0; j < nx; j++) {
             vec3 c;
             for (int n=0; n < ns; n++) {
-                float u = (j + dist(rng)) / float(nx);
-                float v = 1 - (i + dist(rng)) / float(ny);
+                float u = (j + dist(engine)) / float(nx);
+                float v = 1 - (i + dist(engine)) / float(ny);
                 ray r = cam.get_ray(u, v);
                 c += color(r, hl);
             }
