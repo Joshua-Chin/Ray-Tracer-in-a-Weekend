@@ -11,16 +11,19 @@
 
 #include "ray.h"
 
+class material;
+
 class hit_record {
 public:
     float t;
     vec3 position;
     vec3 normal;
+    material* mat;
 };
 
 class hittable {
 public:
-    virtual bool hit_by(const ray& r, float t_min, float t_max, hit_record& record) const {return false;}
+    virtual bool hit_by(const ray& r, float t_min, float t_max, hit_record& record) const = 0;
 };
 
 #endif /* hittable_h */

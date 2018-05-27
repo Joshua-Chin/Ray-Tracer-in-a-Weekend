@@ -14,17 +14,20 @@
 class sphere: public hittable {
     const vec3 center;
     const float radius;
+    material* mat;
 public:
-    sphere(const vec3 c, float r) : center(c), radius(r) {}
+    sphere(const vec3 c, float r, material* m) : center(c), radius(r) {
+        mat = m;
+    }
     bool hit_by(const ray& r, float t_min, float t_max, hit_record& record) const;
 };
 
 bool sphere::hit_by(const ray& r, float t_min, float t_max, hit_record& record) const {
     vec3 oc = r.origin() - center;
     
-    float a = r.direction() * r.direction();
-    float b = oc * r.direction();
-    float c = oc * oc - radius * radius;
+    float a = r.direction().dot(r.direction());
+    float b = oc.dot(r.direction());
+    float c = oc.dot(oc) - radius * radius;
     
     float discriminant = b * b - a * c;
     
@@ -34,6 +37,7 @@ bool sphere::hit_by(const ray& r, float t_min, float t_max, hit_record& record) 
             record.t = t;
             record.position = r.point_at(t);
             record.normal = (record.position - center) / radius;
+            record.mat = mat;
             return true;
         }
         
@@ -42,6 +46,7 @@ bool sphere::hit_by(const ray& r, float t_min, float t_max, hit_record& record) 
             record.t = t;
             record.position = r.point_at(t);
             record.normal = (record.position - center) / radius;
+            record.mat = mat;
             return true;
         }
     }

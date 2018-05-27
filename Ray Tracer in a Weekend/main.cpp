@@ -16,34 +16,39 @@
 #include "hittable_list.h"
 #include "camera.h"
 #include "rng.h"
+#include "material.h"
 
-vec3 random_in_unit_sphere() {
-    std::uniform_real_distribution<float> dist(-1, 1);
-    vec3 p;
-    do {
-        p = vec3(dist(engine), dist(engine), dist(engine));
-    } while (p * p > 1);
-    return p;
-}
-
-vec3 color(const ray& r, hittable& h, float mul=1) {
-    hit_record record;
-    if (mul < 0.001) {
+vec3 color(const ray& r, const hittable& h, int depth, vec3& attenuation) {
+    if (depth == 0) {
         return vec3();
     }
+    hit_record record;
     if (h.hit_by(r, 0.001, MAXFLOAT, record)) {
-        vec3 target = record.position + record.normal + random_in_unit_sphere();
-        return color(ray(record.position, target - record.position), h, 0.5 * mul);
+        ray scattered;
+        if (record.mat->scatter(r, record, attenuation, scattered)) {
+            return color(scattered, h, depth-1, attenuation);
+        } else {
+            return vec3();
+        }
     }
+    // background color
     vec3 d = r.direction();
     float t = 0.5 * (d.y() + 1);
-    return mul * ((1 - t) * vec3(1, 1, 1) + t * vec3(0.5, 0.7, 1));
+    vec3 c = (1 - t) * vec3(1, 1, 1) + t * vec3(0.5, 0.7, 1);
+    return attenuation * c;
+}
+
+vec3 color(const ray& r, const hittable& h, int depth) {
+    vec3 attenuation = vec3(1);
+    return color(r, h, depth, attenuation);
 }
 
 int main(int argc, const char * argv[]) {
-    int nx = 600;
-    int ny = 300;
-    int ns = 100;
+    int nx = 200;
+    int ny = 100;
+    int ns = 50;
+    int nb = 20;
+    
     float gamma = 1 / 2.2;
     
     std::vector<std::uint8_t> image;
@@ -52,8 +57,10 @@ int main(int argc, const char * argv[]) {
     camera cam;
     
     hittable_list hl;
-    hl.hittables.push_back(new sphere(vec3(0, 0, -1), 0.5));
-    hl.hittables.push_back(new sphere(vec3(0, -100.5, -1), 100));
+    hl.hittables.push_back(new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3))));
+    hl.hittables.push_back(new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.2)));
+    hl.hittables.push_back(new sphere(vec3(-1, 0, -1), 0.5, new metal(vec3(0.8, 0.8, 0.8), 0.5)));
+    hl.hittables.push_back(new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0))));
 
     std::uniform_real_distribution<float> dist(0, 1);
     
@@ -64,7 +71,7 @@ int main(int argc, const char * argv[]) {
                 float u = (j + dist(engine)) / float(nx);
                 float v = 1 - (i + dist(engine)) / float(ny);
                 ray r = cam.get_ray(u, v);
-                c += color(r, hl);
+                c += color(r, hl, nb);
             }
             c /= ns;
             image[4 * nx * i + 4 * j + 0] = 255 * pow(c.r(), gamma);
