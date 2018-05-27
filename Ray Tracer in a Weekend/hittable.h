@@ -19,6 +19,8 @@ public:
     vec3 position;
     vec3 normal;
     material* mat;
+    hit_record() {}
+    hit_record(float t0, const vec3& p, const vec3& n, material* m) : t(t0), position(p), normal(normalized(n)), mat(m) {}
 };
 
 class hittable {

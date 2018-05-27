@@ -54,7 +54,7 @@ int main(int argc, const char * argv[]) {
     std::vector<std::uint8_t> image;
     image.resize(4 * ny * nx);
     
-    camera cam;
+    camera cam(120, float(nx) / float(ny));
     
     hittable_list hl;
     hl.hittables.push_back(new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3))));

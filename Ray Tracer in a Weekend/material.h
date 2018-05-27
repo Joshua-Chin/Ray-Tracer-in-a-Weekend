@@ -69,29 +69,50 @@ bool refract(const vec3& v, const vec3& n, float ni_nt, vec3& refracted) {
     }
 }
 
+float schlick(float cos, float ri) {
+    float r0 = (1 - ri) / (1 + ri);
+    r0 = r0 * r0;
+    return r0 + (1-r0) * pow(1-cos, 5);
+}
+
 class dielectric : public material {
     float ri;
+    vec3 a;
 public:
-    dielectric(float refraction_index) : ri(refraction_index) {}
+    dielectric(float refraction_index) : ri(refraction_index), a(1,1,1) {}
+    dielectric(const vec3& albedo, float refraction_index) : a(albedo), ri(refraction_index) {}
+    
     virtual bool scatter(const ray& r, const hit_record& rec, vec3& attenuation, ray& scattered) const {
         vec3 outward_normal;
         float ni_nt;
+        attenuation *= a;
+        float cos;
         // check if exiting material
         if (r.direction().dot(rec.normal) > 0) {
             outward_normal = -rec.normal;
             ni_nt = ri;
+            cos = ri * r.direction().dot(rec.normal);
         } else {
             outward_normal = rec.normal;
             ni_nt = 1 / ri;
+            cos = -r.direction().dot(rec.normal);
         }
+        
+        float reflect_prob;
         vec3 refracted;
         if (refract(r.direction(), outward_normal, ni_nt, refracted)) {
-            scattered = ray(rec.position, refracted);
-            return true;
+            reflect_prob = schlick(cos, ri);
         } else {
-            scattered = ray(rec.position, reflect(r.direction(), outward_normal));
-            return true;
+            reflect_prob = 1;
         }
+        
+        std::uniform_real_distribution<float> d(0, 1);
+        if (d(engine) <= reflect_prob) {
+            scattered = ray(rec.position, reflect(r.direction(), outward_normal));
+        } else {
+            scattered = ray(rec.position, refracted);
+        }
+        return true;
     }
 };
 
