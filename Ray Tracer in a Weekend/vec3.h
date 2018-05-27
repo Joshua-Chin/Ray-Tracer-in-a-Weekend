@@ -35,6 +35,10 @@ public:
     inline float dot(const vec3& v) const {
         return d[0] * v[0] + d[1] * v[1] + d[2] * v[2];
     }
+    
+    inline vec3 cross(const vec3& v) const {
+        return vec3(d[1] * v[2] - d[2] * v[1], d[2] * v[0] - d[0] * v[2], d[0] * v[1] - d[1] * v[0]);
+    }
 };
 
 inline vec3 operator-(const vec3& v) {

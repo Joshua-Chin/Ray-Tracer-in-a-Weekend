@@ -20,6 +20,7 @@ class camera {
     vec3 lower_left;
 public:
     camera() : origin(0,0,0), horizontal(4,0,0), vertical(0,2,0), lower_left(-2,-1,-1) {}
+    
     camera(float hfov, float aspect) {
         float theta = hfov * M_PI / 180;
         float half_width = tan(theta/2);
@@ -30,8 +31,23 @@ public:
         lower_left = vec3(-half_width, -half_height, -1);
     }
     
+    camera(const vec3& pos, const vec3& lookat, const vec3& up, float hfov, float aspect) {
+        float theta = hfov * M_PI / 180;
+        float half_width = tan(theta/2);
+        float half_height = half_width / aspect;
+        
+        vec3 w = normalized(pos-lookat);
+        vec3 u = normalized(up.cross(w));
+        vec3 v = w.cross(u);
+        
+        origin = pos;
+        horizontal = 2 * half_width * u;
+        vertical = 2 * half_height * v;
+        lower_left = origin - horizontal / 2 - vertical / 2 - w;
+    }
+    
     ray get_ray(float u, float v) {
-        return ray(origin, lower_left + u * horizontal + v * vertical);
+        return ray(origin, lower_left + u * horizontal + v * vertical - origin);
     }
 };
 
